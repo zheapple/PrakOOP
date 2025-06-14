@@ -6,10 +6,8 @@ public class Zote extends Boss implements SpecialBosses {
 
     /**
      * Constructor untuk membuat boss zote
-     * Boss memiliki nama "Zote", maxHealth sebanyak 500 dan attackPower
+     * Hornet memiliki nama "Zote", maxHealth sebanyak 500 dan attackPower
      * sebanyak 5
-     * 
-     * @param minionCount jumlah minion
      */
     public Zote(int minionCount) {
         super("Zote", 500, 5);
@@ -17,7 +15,7 @@ public class Zote extends Boss implements SpecialBosses {
     }
 
     /**
-     * Mengembalikan battlecry zote
+     * Mengembalikan battlecry hornet
      * Mengembalikan string "You stand no chance!"
      * 
      * @return "You stand no chance!"
@@ -32,7 +30,7 @@ public class Zote extends Boss implements SpecialBosses {
      *
      */
     public void cloneMinion() {
-        this.minionCount *= 2; // Menggandakan jumlah minion
+        minionCount *= 2;
     }
 
     /**
@@ -45,7 +43,8 @@ public class Zote extends Boss implements SpecialBosses {
     @Override
     public void specialAttack(Knight knight) {
         System.out.println("BY THE POWER OF ZOTE!");
-        knight.setHealth(knight.getHealth() - (this.getAttackPower() * minionCount));
+        int damage = getAttackPower() * minionCount;
+        knight.setHealth(knight.getHealth() - damage);
     }
 
     /**

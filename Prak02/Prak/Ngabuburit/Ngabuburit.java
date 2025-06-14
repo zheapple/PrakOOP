@@ -11,7 +11,7 @@ public class Ngabuburit {
      */
     public Ngabuburit(ICommand command) {
         this.command = command;
-        this.jenuhCounter = 0; // Inisialisasi counter jenuh
+        jenuhCounter = 0;
     }
 
     /**
@@ -21,8 +21,10 @@ public class Ngabuburit {
      * @param command     Aktivitas yang ingin dilakukan
      */
     public void changeCommand(ICommand command) {
-        this.command = command;
-        this.jenuhCounter = 0; // Reset counter jenuh
+        if (this.command != command){
+            this.command = command;
+            jenuhCounter = 0;
+        }
     }
 
     /**
@@ -33,22 +35,20 @@ public class Ngabuburit {
      * @param command     Aktivitas yang ingin dilakukan dalam string
      */
     public void changeCommandStr(String command) {
-        if (command.equals("laptop") || command.equals("pintu") || command.equals("rumah")) {
-            switch (command) {
-                case "laptop":
-                    this.command = new LaptopCommand(new Laptop());
-                    break;
-                case "pintu":
-                    this.command = new PintuCommand(new Pintu());
-                    break;
-                case "rumah":
-                    this.command = new RumahCommand(new Rumah());
-                    break;
-            }
-            this.jenuhCounter = 0; // Reset counter jenuh
-        // } else {
-        //     System.out.println("Command tidak valid!");
+        switch (command){
+            case "laptop" :
+                this.command = new LaptopCommand(new Laptop());
+                break;
+            
+            case "pintu" :
+                this.command = new PintuCommand(new Pintu());
+                break;
+
+            case "rumah" :
+                this.command = new RumahCommand(new Rumah());
+                break;
         }
+        jenuhCounter = 0;
     }
 
     /**
@@ -57,11 +57,12 @@ public class Ngabuburit {
      * ke layar.
      */
     public void doStuff() {
-        if (this.jenuhCounter < maxSameActivity) {
-            this.command.execute();
-            this.jenuhCounter++;
-        } else {
+        if (jenuhCounter >= maxSameActivity){
             System.out.println("Sudah jenuh! Lakukan aktivitas lain");
+        }
+        else{
+            command.execute();
+            jenuhCounter++;
         }
     }
 }

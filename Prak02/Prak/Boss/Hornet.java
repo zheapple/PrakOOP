@@ -8,8 +8,6 @@ public class Hornet extends Boss implements SpecialBosses {
      * Constructor untuk membuat boss hornet
      * Hornet memiliki nama "Hornet", maxHealth sebanyak 900 dan attackPower
      * sebanyak 15
-     * 
-     * @param stringAmount jumlah string yang dimiliki hornet
      */
     public Hornet(int stringAmount) {
         super("Hornet", 900, 15);
@@ -32,7 +30,7 @@ public class Hornet extends Boss implements SpecialBosses {
      *
      */
     public void chargeString() {
-        this.stringAmount += 100;
+        stringAmount += 100;
     }
 
     /**
@@ -48,12 +46,14 @@ public class Hornet extends Boss implements SpecialBosses {
      */
     @Override
     public void specialAttack(Knight knight) {
-        if (this.stringAmount < 11) {
+        if (stringAmount <= 10){
             System.out.println("[String insufficient]");
-        } else {
+        }
+        else{
             System.out.println("ADINO!");
-            knight.setHealth(knight.getHealth() - (this.getAttackPower() + this.stringAmount));
-            this.stringAmount = 0; // Menghabiskan semua string
+            int damage = getAttackPower() + stringAmount;
+            stringAmount = 0;
+            knight.setHealth(knight.getHealth() - damage);
         }
     }
 

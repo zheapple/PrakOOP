@@ -14,7 +14,7 @@ public class PintuCommand implements ICommand {
      */
     public PintuCommand(Pintu pintu) {
         this.pintu = pintu;
-        this.state = 0; // State awal adalah tertutup
+        state = 0;
     }
     
     /**
@@ -22,12 +22,9 @@ public class PintuCommand implements ICommand {
      * - Bila state sekarang = 0, maka pintu akan dibuka
      */
     public void execute() {
-        if (state == 0) {
+        if (state == 0){
             pintu.open();
-            state = 1; // Ubah state menjadi terbuka
-        } else if (state == 1) {
-            pintu.close();
-            state = 0; // Ubah state menjadi tertutup
+            state = 1;
         }
     }
 
@@ -36,11 +33,9 @@ public class PintuCommand implements ICommand {
      * - Bila state sekarang selain 0, maka pintu akan ditutup
      */
     public void undo() {
-        if (state != 0) {
+        if (state != 0){
             pintu.close();
-            state = 0; // Ubah state menjadi tertutup
-        // } else {
-        //     System.out.println("Pintu sudah dalam keadaan tertutup.");
+            state = 0;
         }
     }
 }

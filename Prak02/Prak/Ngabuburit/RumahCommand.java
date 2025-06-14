@@ -16,7 +16,7 @@ public class RumahCommand implements ICommand {
      */
     public RumahCommand(Rumah rumah) {
         this.rumah = rumah;
-        this.state = 0; // State awal adalah berada di rumah
+        state = 0;
     }
     
     /**
@@ -27,15 +27,23 @@ public class RumahCommand implements ICommand {
      * 
      */
     public void execute() {
-        if (state == 0) {
-            rumah.goOut();
-            state = 1; // Ubah state menjadi berada di luar rumah
-        } else if (state == 1) {
-            rumah.run();
-            state = 2; // Ubah state menjadi membeli kolak
-        } else if (state == 2) {
-            rumah.buy();
-            state = 1; // Ubah state kembali ke berlari
+        switch (state) {
+            case 0 :
+                rumah.goOut();
+                state = 1;
+                break;
+            
+            case 1 :
+                rumah.run();
+                state = 2;
+                break;
+            
+            case 2 :
+                rumah.buy();
+                state = 1;
+                break;
+            default:
+                break;
         }
     }
 
@@ -44,12 +52,9 @@ public class RumahCommand implements ICommand {
      * - Bila state sekarang selain 0, maka akan kembali masuk ke rumah
      */
     public void undo() {
-        if (state != 0) {
+        if (state != 0){
             rumah.goIn();
-            state = 0; // Ubah state menjadi berada di rumah
-        } 
-        // else {
-        //     System.out.println("Anda sudah berada di dalam rumah.");
-        // }
+            state = 0;
+        }
     }
 }

@@ -8,9 +8,10 @@ public abstract class Boss {
     private int maxHealth;
     private int attackPower;
     private static String difficulty = "Attuned";
-    private static Boss[] pantheon;
-    private static int pantheonSize = 0;
+    private static Boss[] pantheon ;
+    private static int pantheonSize;
     private static final int MAX_PANTHEON_SIZE = 4;
+
 
     /**
      * Constructor untuk membuat Boss baru
@@ -23,10 +24,13 @@ public abstract class Boss {
      */
     public Boss(String name, int maxHealth, int attackPower) {
         this.name = name;
-        this.currentHealth = maxHealth;
+        currentHealth = maxHealth;
         this.maxHealth = maxHealth;
         this.attackPower = attackPower;
-        pantheon = new Boss[MAX_PANTHEON_SIZE];
+        if (pantheon == null){
+            pantheon = new Boss[MAX_PANTHEON_SIZE];
+            pantheonSize = 0;
+        }
     }
 
     /**
@@ -49,17 +53,11 @@ public abstract class Boss {
 
     /**
      * Mengatur health boss
-     * HINT : PERHATIKAN BATASAN SOAL!
+     * 
      * @param health nilai health baru
      */
     public void setHealth(int health) {
-        if (health <= maxHealth && health >= 0) {
-            this.currentHealth = health;
-        } else if (health > maxHealth) {
-            this.currentHealth = maxHealth;
-        } else {
-            this.currentHealth = 0; // Jika health kurang dari 0, set ke 0
-        }
+        currentHealth = health < 0 ? 0 : health > maxHealth ? maxHealth : health;
     }
 
     /**
@@ -77,11 +75,7 @@ public abstract class Boss {
      * @param health nilai attack power baru
      */
     public void setAttackPower(int attackPower) {
-        if (attackPower >= 0) {
-            this.attackPower = attackPower;
-        } else {
-            this.attackPower = 0; // Jika attack power kurang dari 0, set ke 0
-        }
+        this.attackPower = attackPower;
     }
 
     /**
@@ -106,9 +100,9 @@ public abstract class Boss {
      * @param difficulty kesulitan pantheon
      */
     public static void setDifficulty(String difficulty) {
-        if (difficulty.equals("Attuned") || difficulty.equals("Ascended") || difficulty.equals("Radiant")) {
-            Boss.difficulty = difficulty;
-        }
+        if (difficulty.equals("Attuned")) Boss.difficulty = "Attuned";
+        else if (difficulty.equals("Ascended")) Boss.difficulty = "Ascended";
+        else if (difficulty.equals("Radiant")) Boss.difficulty = "Radiant";
     }
 
     /**
@@ -118,12 +112,14 @@ public abstract class Boss {
      * @return true jika berhasil ditambahkan, false jika party penuh
      */
     public static boolean addBossToPantheon(Boss boss) {
-        if (pantheonSize < MAX_PANTHEON_SIZE) {
+        if (pantheonSize < MAX_PANTHEON_SIZE){
             pantheon[pantheonSize] = boss;
             pantheonSize++;
             return true;
         }
-        return false;
+        else{
+            return false;
+        }
     }
 
     /**
@@ -132,12 +128,7 @@ public abstract class Boss {
      * @return pantheon
      */
     public static Boss[] getPantheon() {
-        // Return array dengan size pantheonSize
-        Boss[] result = new Boss[pantheonSize];
-        for (int i = 0; i < pantheonSize; i++) {
-            result[i] = pantheon[i];
-        }
-        return result;
+        return pantheon;
     }
 
     /**
@@ -168,35 +159,27 @@ public abstract class Boss {
     public static void playPantheon(Knight knight) {
         System.out.println("== PANTHEON STARTS ==");
         int modifier = 0;
-        if (difficulty.equals("Ascended")) {
-            modifier = 20;
-        } else if (difficulty.equals("Radiant")) {
-            modifier = 30;
+        if (difficulty.equals("Attuned")) modifier = 0;
+        else if (difficulty.equals("Ascended")) modifier = 20;
+        else if (difficulty.equals("Radiant")) modifier = 30;
+
+        for (int i = 0 ; i < pantheonSize; i++){
+            pantheon[i].setAttackPower(pantheon[i].getAttackPower() + modifier);
+            if (pantheon[i] instanceof SpecialBosses){
+                ((SpecialBosses) pantheon[i]).specialAttack(knight);
+            }
         }
-        for (int i = 0; i < pantheonSize; i++) {
-            Boss boss = pantheon[i];
-            int originalAttack = boss.getAttackPower();
-            boss.setAttackPower(originalAttack + modifier);
-            boss.specialAttack(knight);
-            boss.setAttackPower(originalAttack);
-        }
-        if (knight.getHealth() > 0) {
+        if (knight.getHealth() > 0 ){
             System.out.println("The Knight Survives!");
-        } else {
+        }
+        else{
             System.out.println("The Knight Dies!");
         }
+
     }
 
     /**
-     * Abstract method untuk special attack.
-     * Harus diimplementasikan oleh subclass Boss.
-     * 
-     * @param knight target serangan
-     */
-    public abstract void specialAttack(Knight knight);
-
-    /**
-     * Representasi string dari Boss
+     * Representasi string dari Hunter
      * 
      * @return String yang merepresentasikan Boss
      */

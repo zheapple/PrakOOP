@@ -12,16 +12,16 @@ public class Knight {
     /**
      * Constructor untuk membuat Knight baru
      * Ingat bahwa Knight akan memiliki current health maksimal ketika dibuat
-     * Ingat bahwa Knight akan memiliki current soul maksimal ketika dibuat
      * 
+     * @param maxSoul     Jumlah soul maksimum
      * @param maxHealth   Jumlah health maksimum
      * @param attackPower Kekuatan serangan dasar Knight
      */
     public Knight(int maxHealth, int attackPower) {
         this.maxHealth = maxHealth;
+        this.currentSoul = maxSoul;
+        this.currentHealth = maxHealth;
         this.attackPower = attackPower;
-        this.currentHealth = maxHealth; // Knight mulai dengan health penuh
-        this.currentSoul = maxSoul; // Knight mulai dengan soul penuh
     }
 
     /**
@@ -35,13 +35,12 @@ public class Knight {
 
     /**
      * Menambahkan jumlah soul sebanyak 30 poin
-     * HINT : PERHATIKAN BATASAN SOAL, ADA MAX SOUL!
+     * 
      */
     public void focus() {
-        if (currentSoul + 30 <= maxSoul) {
-            currentSoul += 30;
-        } else {
-            currentSoul = maxSoul; // Tidak boleh melebihi max soul
+        currentSoul += 30;
+        if (currentSoul > maxSoul){
+            currentSoul = maxSoul;
         }
     }
 
@@ -56,17 +55,13 @@ public class Knight {
 
     /**
      * Mengatur health knight
-     * HINT : PERHATIKAN BATASAN SOAL!
+     * 
      * @param health nilai health baru
      */
     public void setHealth(int health) {
-        if (health <= maxHealth && health >= 0) {
-            this.currentHealth = health;
-        } else if (health > maxHealth) {
-            this.currentHealth = maxHealth; // Tidak boleh melebihi max health
-        } else {
-            this.currentHealth = 0; // Tidak boleh kurang dari 0
-        }
+        currentHealth = health;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
+        else if (currentHealth < 0) currentHealth = 0;
     }
 
     /**
@@ -74,17 +69,21 @@ public class Knight {
      * Akan mengurangi soul sebanyak 30 dan menambahkan health sebanyak 30
      * mengembalikan true apabila healing berhasil dilakukan
      * mengembalikan false apabila soul tidak mencukupi
-     * HINT : PERHATIKAN BATASAN SOAL!
+     * 
      * @return true atau false, sesuai keadaan
      */
     public boolean heal() {
-        if (currentSoul >= 30) {
-            currentSoul -= 30; // Mengurangi soul
-            setHealth(currentHealth + 30); // Menambahkan health
-            return true; // Healing berhasil
-        } else {
-            return false; // Soul tidak mencukupi
+       if (currentSoul >= 30){
+        currentHealth += 30;
+        if (currentHealth > maxHealth){
+            currentHealth = maxHealth;
         }
+        currentSoul -= 30;
+        return true;
+       }
+       else{
+        return false;
+       }
     }
 
     /**
@@ -98,12 +97,14 @@ public class Knight {
 
     /**
      * Menyerang boss
-     * Mengurangi HP boss dengan attack power knight
      * 
      * @param boss target
      */
     public void attackBoss(Boss boss) {
         boss.setHealth(boss.getHealth() - attackPower);
+        if (boss.getHealth() < 0){
+            boss.setHealth(0);
+        }
     }
 
     /**
@@ -111,23 +112,23 @@ public class Knight {
      * 1. print "== ATTACKING PANTHEON =="
      * 2. Menyerang semua boss dalam pantheon
      * 3. print boss tersebut setelah boss tersebut diserang
-     * (gunakan representasi string boss)
      * 3. print "== PANTHEON ENDS =="
      * 
+     * @param knight target
      */
     public void attackPantheon() {
         System.out.println("== ATTACKING PANTHEON ==");
-        for (Boss boss : Boss.getPantheon()) {
-            attackBoss(boss);
-            System.out.println(boss); // Menggunakan representasi string boss
+        for (int i = 0; i <  Boss.getPantheonSize(); i++){
+            attackBoss(Boss.getPantheon()[i]);            
+            System.out.println(Boss.getPantheon()[i].toString());
         }
         System.out.println("== PANTHEON ENDS ==");
     }
 
     /**
-     * Representasi string dari Knight
+     * Representasi string dari Boss
      * 
-     * @return String yang merepresentasikan Knight
+     * @return String yang merepresentasikan Boss
      */
     @Override
     public String toString() {

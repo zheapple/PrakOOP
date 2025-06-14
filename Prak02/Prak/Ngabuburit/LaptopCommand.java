@@ -14,7 +14,7 @@ public class LaptopCommand implements ICommand {
      */
     public LaptopCommand(Laptop laptop) {
         this.laptop = laptop;
-        this.state = 0; // State awal adalah mati
+        state = 0;
     }
     
     /**
@@ -23,11 +23,15 @@ public class LaptopCommand implements ICommand {
      * - Bila state sekarang = 1, maka laptop akan digunakan
      */
     public void execute() {
-        if (state == 0) {
+        switch (state) {
+            case 0 :
             laptop.turnOn();
-            state = 1; // Ubah state menjadi menyala
-        } else if (state == 1) {
+            state = 1;
+                break;
+            
+            case 1 :
             laptop.use();
+                break;
         }
     }
 
@@ -36,12 +40,9 @@ public class LaptopCommand implements ICommand {
      * - Bila state sekarang selain 0, maka laptop akan dimatikan
      */
     public void undo() {
-        if (state == 1) {
+        if (state != 0){
             laptop.turnOff();
-            state = 0; // Ubah state menjadi mati
+            state = 0;
         }
-        //  else if (state == 0) {
-        //     System.out.println("Laptop sudah dalam keadaan mati.");
-        // }
     }
 }
